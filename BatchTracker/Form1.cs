@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace BatchTracker
             
         }
 
-        string connectionString = "Server=3JS0082\\JUSTINSQLEXPRESS;Database=master;Integrated Security=true;";
+        string connectionString = "";
         string C1ConnString = "Server=SQL1\\SQL2005;DataBase=CodeOneMaster;UID=ReadOnlyUser;PWD=lij1Z96h";
 
         List<string> practiceList = new List<string>();
@@ -78,21 +79,30 @@ namespace BatchTracker
 
         private void Populate_btn_Click(object sender, EventArgs e)
         {
-            string sql = "SELECT * FROM TestAPdb";
+            
+            OleDbConnection cnn;
+            OleDbCommand cmd;
+            string sql = "SELECT * FROM Batch WHERE Status = 'Q';";
+            OleDbDataReader reader;
+            string sDataBase = "";
+            string connectionString = "Data Source=\\\\Claims2\\AltaData\\" + sDataBase + "\\Data\\AltaPoint.add;User ID=admin;Password=admin;";
+
             try
             {
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                var practices = GetPractices();
+                if (practices != null)
                 {
-                    connection.Open();
-                    using (SqlDataAdapter dataadapter = new SqlDataAdapter(sql, connection))
+                    foreach (string prac in practices)
                     {
-                        DataSet ds = new DataSet();
-                        dataadapter.Fill(ds, "TestAPdb");
-                        connection.Close();
-                        dataGridView1.DataSource = ds;
-                        dataGridView1.DataMember = "TestAPdb";
+
                     }
                 }
+
+                //DataSet ds = new DataSet();
+                //            dataadapter.Fill(ds, "TestAPdb");
+                //            dataGridView1.DataSource = ds;
+                //            dataGridView1.DataMember = "TestAPdb";
+
                 DataGridViewColumn column0 = dataGridView1.Columns[0];
                 column0.Width = 275;
                 DataGridViewColumn column1 = dataGridView1.Columns[1];
