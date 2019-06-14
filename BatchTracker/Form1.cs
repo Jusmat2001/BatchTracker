@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+
 namespace BatchTracker
 {
     public partial class Form1 : Form
@@ -22,7 +24,6 @@ namespace BatchTracker
 
         string connectionString = "";
         string C1ConnString = "Server=SQL1\\SQL2005;DataBase=CodeOneMaster;UID=ReadOnlyUser;PWD=lij1Z96h";
-
         List<string> practiceList = new List<string>();
 
 
@@ -31,17 +32,13 @@ namespace BatchTracker
             try
             {
                 practiceList = GetPractices();
-                practiceListView.GridLines = true;
-
                 if (practiceList!=null)
                 {
-
                     foreach (string prac in practiceList)
                     {
                         practiceListView.Items.Add(prac);
                     }
                 }
-                
             }
             catch (Exception ex)
             {
@@ -66,6 +63,14 @@ namespace BatchTracker
                             {
                                 list.Add(reader.GetString(0));
                             }
+                            //loop through and remove non pracs
+                            for (int i = 0; i < list.Count; i++)
+                            {
+                                if ((list[i] == "100") || (list[i] == "998"))
+                                {
+                                    list.RemoveAt(i);
+                                }
+                            }
                         }
                     }
                 }
@@ -79,30 +84,41 @@ namespace BatchTracker
 
         private void Populate_btn_Click(object sender, EventArgs e)
         {
-            
             OleDbConnection cnn;
             OleDbCommand cmd;
-            string sql = "SELECT * FROM Batch WHERE Status = 'Q';";
-            OleDbDataReader reader;
+            string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
+            //OleDbDataReader reader;
             string sDataBase = "";
-            string connectionString = "Data Source=\\\\Claims2\\AltaData\\" + sDataBase + "\\Data\\AltaPoint.add;User ID=admin;Password=admin;";
+            //string connectionString = "";
+            DataSet ds = new DataSet();
+            string provider = "Provider = Microsoft.Jet.OLEDB.4.0;";
+            string dataSource = "";
+            string user = "User ID = admin; Password = admin; Advantage Server Type = ADS_REMOTE_SERVER; SecurityMode = ADS_IGNORERIGHTS;";// Cannot find installable ISAM
+            //"Jet OLEDB: Database Password = admin;"; <-- workgroup info is missing or opened exclusively by another user
 
             try
             {
-                var practices = GetPractices();
-                if (practices != null)
+                practiceList = GetPractices();
+                if (practiceList != null)
                 {
-                    foreach (string prac in practices)
+                    foreach (string prac in practiceList)
                     {
-
+                        //change conn string for each practice
+                        sDataBase = prac;
+                        dataSource = @"Data Source = \\CLAIMS2\AltaData\" + sDataBase + @"\data\AltaPoint.add;";
+                        connectionString = provider + dataSource + user;
+                        // loop, build connstring, query, add to da
+                        using (cnn = new OleDbConnection(connectionString))
+                        {
+                            cnn.Open();
+                            cmd = new OleDbCommand(sql, cnn);
+                            OleDbDataAdapter adapter = new OleDbDataAdapter(cmd);
+                            adapter.Fill(ds);
+                        }
                     }
                 }
-
-                //DataSet ds = new DataSet();
-                //            dataadapter.Fill(ds, "TestAPdb");
-                //            dataGridView1.DataSource = ds;
-                //            dataGridView1.DataMember = "TestAPdb";
-
+                dataGridView1.DataSource = ds;
+                dataGridView1.DataMember = "practiceList";
                 DataGridViewColumn column0 = dataGridView1.Columns[0];
                 column0.Width = 275;
                 DataGridViewColumn column1 = dataGridView1.Columns[1];
@@ -118,14 +134,14 @@ namespace BatchTracker
 
         private void Search_btn_Click(object sender, EventArgs e)
         {
-            
+
             string searchTerm = "";
             string practice = "";
             try
             {
                 if (SearchBox.Text.Count() < 3)
                 {
-                    MessageBox.Show("Please enter at least 3 numbers to search.");
+                    MessageBox.Show("Please enter at least 3 numbers starting with the practice ID to search.");
                 }
                 else
                 {
@@ -138,7 +154,7 @@ namespace BatchTracker
                 MessageBox.Show(ex.Message);
             }
 
-            string sql = "SELECT * FROM TestAPdb WHERE Batch# LIKE '%"+searchTerm+"%'";
+            string sql = "SELECT * FROM TestAPdb WHERE Batch# LIKE '%" + searchTerm + "%'";
             try
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -167,6 +183,6 @@ namespace BatchTracker
 
         }
 
-        
+
     }
 }
