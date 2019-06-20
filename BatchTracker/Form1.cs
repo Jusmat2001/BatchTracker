@@ -63,14 +63,8 @@ namespace BatchTracker
                             {
                                 list.Add(reader.GetString(0));
                             }
-                            //loop through and remove non pracs
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                if ((list[i] == "100") || (list[i] == "998"))
-                                {
-                                    list.RemoveAt(i);
-                                }
-                            }
+                            list.Remove("100");
+                            list.Remove("998");
                         }
                     }
                 }
@@ -87,11 +81,10 @@ namespace BatchTracker
             OleDbConnection cnn;
             OleDbCommand cmd;
             string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-            //OleDbDataReader reader;
             string sDataBase = "";
-            //string connectionString = "";
             DataSet ds = new DataSet();
-            string provider = "Provider = Microsoft.Jet.OLEDB.4.0;";
+            //string provider = "Provider=Microsoft.Jet.OLEDB.4.0;";
+            string provider = "Provider=Advantage Client Engine SDK x86_64 v10.0;";
             string dataSource = "";
             string user = "User ID = admin; Password = admin; Advantage Server Type = ADS_REMOTE_SERVER; SecurityMode = ADS_IGNORERIGHTS;";// Cannot find installable ISAM
             //"Jet OLEDB: Database Password = admin;"; <-- workgroup info is missing or opened exclusively by another user
@@ -105,7 +98,7 @@ namespace BatchTracker
                     {
                         //change conn string for each practice
                         sDataBase = prac;
-                        dataSource = @"Data Source = \\CLAIMS2\AltaData\" + sDataBase + @"\data\AltaPoint.add;";
+                        dataSource = @"Data Source = \\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
                         connectionString = provider + dataSource + user;
                         // loop, build connstring, query, add to da
                         using (cnn = new OleDbConnection(connectionString))
@@ -129,6 +122,7 @@ namespace BatchTracker
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                MessageBox.Show(System.Environment.MachineName.ToString());
             }
         }
 
