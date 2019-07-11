@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Advantage.Data.Provider;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,10 +23,10 @@ namespace BatchTracker
             
         }
 
-        string connectionString = "";
         string C1ConnString = "Server=SQL1\\SQL2005;DataBase=CodeOneMaster;UID=ReadOnlyUser;PWD=lij1Z96h";
         List<string> practiceList = new List<string>();
-
+        public AdsConnection connection;
+        public AdsCommand command;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -78,64 +79,81 @@ namespace BatchTracker
 
         private void Populate_btn_Click(object sender, EventArgs e)
         {
-            OleDbConnection cnn;
-            OleDbCommand cmd;
-            string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-            string sDataBase = "";
-            DataSet ds = new DataSet();
-            //string provider = "Provider=Microsoft.Jet.OLEDB.4.0;";
-            string provider = "Provider=Advantage Client Engine SDK x86_64 v10.0;";
-            string dataSource = "";
-            string user = "User ID = admin; Password = admin; Advantage Server Type = ADS_REMOTE_SERVER; SecurityMode = ADS_IGNORERIGHTS;";// Cannot find installable ISAM
-            //"Jet OLEDB: Database Password = admin;"; <-- workgroup info is missing or opened exclusively by another user
 
+            string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
+            string user = "User ID=admin;Password=admin;";
+            string type = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+            string sDataBase = "";
+            string dataSource = "";
+            
+            DataTable mainTable = new DataTable();
+            mainTable.Columns.Add("Practice", typeof(Int32), sDataBase);
             try
             {
                 practiceList = GetPractices();
                 if (practiceList != null)
                 {
-                    foreach (string prac in practiceList)
+                    for (int i = 0; i <= practiceList.Count - 1; i++)
                     {
                         //change conn string for each practice
-                        sDataBase = prac;
-                        dataSource = @"Data Source = \\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
-                        connectionString = provider + dataSource + user;
-                        // loop, build connstring, query, add to da
-                        using (cnn = new OleDbConnection(connectionString))
+                        sDataBase = practiceList[i];
+                        dataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
+                        string connectionString = @"Data Source = " + dataSource + user + type;
+                        connection = new AdsConnection { ConnectionString = connectionString };
+                        //add row to differentiate practices between loops
+                        DataRow row;
+                        row = mainTable.NewRow();
+                        row["Practice"] = sDataBase;
+                        mainTable.Rows.Add(row);
+                        
+                        using (connection)
                         {
-                            cnn.Open();
-                            cmd = new OleDbCommand(sql, cnn);
-                            OleDbDataAdapter adapter = new OleDbDataAdapter(cmd);
-                            adapter.Fill(ds);
+                            try
+                            {
+                                connection.Open();
+                                DataSet ds = new DataSet();
+                                IDataAdapter adapter;
+                                DataTable dt = new DataTable();
+
+                                adapter = new AdsDataAdapter(sql, connection);
+                                adapter.Fill(ds);
+                                dt = ds.Tables[0];
+                                mainTable.Merge(dt);
+                                ds.Clear();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Unable to access " + sDataBase + "\n\n" + ex.Message);
+                            }
                         }
                     }
                 }
-                dataGridView1.DataSource = ds;
-                dataGridView1.DataMember = "practiceList";
+                
+                dataGridView1.DataSource = mainTable;
                 DataGridViewColumn column0 = dataGridView1.Columns[0];
-                column0.Width = 275;
+                column0.Width = 100;
                 DataGridViewColumn column1 = dataGridView1.Columns[1];
                 column1.Width = 100;
                 DataGridViewColumn column2 = dataGridView1.Columns[2];
-                column2.Width = 150;
+                column2.Width = 100;
+                DataGridViewColumn column3 = dataGridView1.Columns[3];
+                column2.Width = 100;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                MessageBox.Show(System.Environment.MachineName.ToString());
             }
         }
 
         private void Search_btn_Click(object sender, EventArgs e)
         {
-
             string searchTerm = "";
             string practice = "";
             try
             {
                 if (SearchBox.Text.Count() < 3)
                 {
-                    MessageBox.Show("Please enter at least 3 numbers starting with the practice ID to search.");
+                    MessageBox.Show("Please enter at least 3 numbers of the practice ID to search.");
                 }
                 else
                 {
@@ -147,36 +165,6 @@ namespace BatchTracker
             {
                 MessageBox.Show(ex.Message);
             }
-
-            string sql = "SELECT * FROM TestAPdb WHERE Batch# LIKE '%" + searchTerm + "%'";
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    connection.Open();
-                    using (SqlDataAdapter dataadapter = new SqlDataAdapter(sql, connection))
-                    {
-                        DataSet ds = new DataSet();
-                        dataadapter.Fill(ds, "TestAPdb");
-                        connection.Close();
-                        dataGridView1.DataSource = ds;
-                        dataGridView1.DataMember = "TestAPdb";
-                    }
-                }
-                DataGridViewColumn column0 = dataGridView1.Columns[0];
-                column0.Width = 275;
-                DataGridViewColumn column1 = dataGridView1.Columns[1];
-                column1.Width = 100;
-                DataGridViewColumn column2 = dataGridView1.Columns[2];
-                column2.Width = 150;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
         }
-
-
     }
 }
