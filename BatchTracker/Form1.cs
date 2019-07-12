@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -79,76 +80,91 @@ namespace BatchTracker
 
         private void Populate_btn_Click(object sender, EventArgs e)
         {
-
-            string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-            string user = "User ID=admin;Password=admin;";
-            string type = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
-            string sDataBase = "";
-            string dataSource = "";
-            
-            DataTable mainTable = new DataTable();
-            mainTable.Columns.Add("Practice", typeof(Int32), sDataBase);
             try
             {
-                practiceList = GetPractices();
-                if (practiceList != null)
-                {
-                    for (int i = 0; i <= practiceList.Count - 1; i++)
-                    {
-                        //change conn string for each practice
-                        sDataBase = practiceList[i];
-                        dataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
-                        string connectionString = @"Data Source = " + dataSource + user + type;
-                        connection = new AdsConnection { ConnectionString = connectionString };
-                        //add row to differentiate practices between loops
-                        DataRow row;
-                        row = mainTable.NewRow();
-                        row["Practice"] = sDataBase;
-                        mainTable.Rows.Add(row);
-                        
-                        using (connection)
-                        {
-                            try
-                            {
-                                connection.Open();
-                                DataSet ds = new DataSet();
-                                IDataAdapter adapter;
-                                DataTable dt = new DataTable();
+                string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
+                string user = "User ID=admin;Password=admin;";
+                string type = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+                string sDataBase = "";
+                string dataSource = "";
+                string badpracs = "";
 
-                                adapter = new AdsDataAdapter(sql, connection);
-                                adapter.Fill(ds);
-                                dt = ds.Tables[0];
-                                mainTable.Merge(dt);
-                                ds.Clear();
-                            }
-                            catch (Exception ex)
+                DataTable mainTable = new DataTable();
+                mainTable.Columns.Add("Practice", typeof(Int32), sDataBase);
+                try
+                {
+                    practiceList = GetPractices();
+                    if (practiceList != null)
+                    {
+                        for (int i = 0; i <= practiceList.Count - 1; i++)
+                        {
+                            //change conn string for each practice
+                            sDataBase = practiceList[i];
+                            dataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
+                            string connectionString = @"Data Source = " + dataSource + user + type;
+                            connection = new AdsConnection { ConnectionString = connectionString };
+                            //add row to differentiate practices between loops
+                            DataRow row;
+                            row = mainTable.NewRow();
+                            row["Practice"] = sDataBase;
+                            mainTable.Rows.Add(row);
+
+                            using (connection)
                             {
-                                MessageBox.Show("Unable to access " + sDataBase + "\n\n" + ex.Message);
+                                try
+                                {
+                                    connection.Open();
+                                    DataSet ds = new DataSet();
+                                    IDataAdapter adapter;
+                                    DataTable dt = new DataTable();
+
+                                    adapter = new AdsDataAdapter(sql, connection);
+                                    adapter.Fill(ds);
+                                    dt = ds.Tables[0];
+                                    mainTable.Merge(dt);
+                                    ds.Clear();
+                                }
+                                catch (Exception ex)
+                                {
+                                    badpracs += sDataBase + ", ";
+                                }
                             }
                         }
                     }
+
+                    dataGridView1.DataSource = mainTable;
+                    DataGridViewColumn column0 = dataGridView1.Columns[0];
+                    column0.Width = 100;
+                    DataGridViewColumn column1 = dataGridView1.Columns[1];
+                    column1.Width = 100;
+                    DataGridViewColumn column2 = dataGridView1.Columns[2];
+                    column2.Width = 100;
+                    DataGridViewColumn column3 = dataGridView1.Columns[3];
+                    column2.Width = 100;
+                    MessageBox.Show("Unable to retrieve " + badpracs);
                 }
-                
-                dataGridView1.DataSource = mainTable;
-                DataGridViewColumn column0 = dataGridView1.Columns[0];
-                column0.Width = 100;
-                DataGridViewColumn column1 = dataGridView1.Columns[1];
-                column1.Width = 100;
-                DataGridViewColumn column2 = dataGridView1.Columns[2];
-                column2.Width = 100;
-                DataGridViewColumn column3 = dataGridView1.Columns[3];
-                column2.Width = 100;
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //int line = (new StackTrace(ex, true)).GetFrame(FrameCount-1).GetFileLineNumber();
+                MessageBox.Show(ex.ToString());
             }
+            
         }
 
         private void Search_btn_Click(object sender, EventArgs e)
         {
             string searchTerm = "";
             string practice = "";
+            string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
+            string user = "User ID=admin;Password=admin;";
+            string type = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+            string sDataBase = "";
+            string dataSource = "";
             try
             {
                 if (SearchBox.Text.Count() < 3)
@@ -159,7 +175,16 @@ namespace BatchTracker
                 {
                     searchTerm = SearchBox.Text;
                     practice = searchTerm.Substring(0, 3);
+                    if (practice != null)
+                    {
+                        if (practiceList.Contains(practice))
+                        {
+                            //set conn string and query practice
+                            //set datagrid
+                        }
+                    }
                 }
+
             }
             catch (Exception ex)
             {
