@@ -65,8 +65,8 @@ namespace BatchTracker
                             {
                                 list.Add(reader.GetString(0));
                             }
-                            list.Remove("100");
-                            list.Remove("998");
+                            if (list.Contains("100")) { list.Remove("100"); }
+                            if (list.Contains("998")) { list.Remove("998"); }
                         }
                     }
                 }
@@ -82,12 +82,15 @@ namespace BatchTracker
         {
             try
             {
-                string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-                string user = "User ID=admin;Password=admin;";
-                string type = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+                string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
+                string sUser = "User ID=admin;Password=admin;";
+                string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
                 string sDataBase = "";
-                string dataSource = "";
-                string badpracs = "";
+                string sDataSource = "";
+                string sBadpracs = "";
+                Application.UseWaitCursor = true;
+                this.UseWaitCursor = true;
+                int iBatchcount = 0;
 
                 DataTable mainTable = new DataTable();
                 mainTable.Columns.Add("Practice", typeof(Int32), sDataBase);
@@ -96,100 +99,105 @@ namespace BatchTracker
                     practiceList = GetPractices();
                     if (practiceList != null)
                     {
+                        //MessageBox.Show("loop");
                         for (int i = 0; i <= practiceList.Count - 1; i++)
                         {
                             //change conn string for each practice
                             sDataBase = practiceList[i];
-                            dataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
-                            string connectionString = @"Data Source = " + dataSource + user + type;
+                            sDataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
+                            string connectionString = @"Data Source = " + sDataSource + sUser + sType;
                             connection = new AdsConnection { ConnectionString = connectionString };
-                            //add row to differentiate practices between loops
-                            DataRow row;
-                            row = mainTable.NewRow();
-                            row["Practice"] = sDataBase;
-                            mainTable.Rows.Add(row);
-
+                            
                             using (connection)
                             {
                                 try
                                 {
+                                    //MessageBox.Show("connection good to "+connectionString);
                                     connection.Open();
                                     DataSet ds = new DataSet();
-                                    IDataAdapter adapter;
                                     DataTable dt = new DataTable();
-
-                                    adapter = new AdsDataAdapter(sql, connection);
+                                    IDataAdapter adapter = new AdsDataAdapter(sSql, connection);
+                                    
                                     adapter.Fill(ds);
-                                    dt = ds.Tables[0];
-                                    mainTable.Merge(dt);
+                                    iBatchcount += ds.Tables[0].Rows.Count;
+                                    if (ds.Tables[0].Rows.Count >0)
+                                    {
+                                        DataRow row;
+                                        row = mainTable.NewRow();
+                                        row["Practice"] = sDataBase;
+                                        mainTable.Rows.Add(row);
+                                        dt = ds.Tables[0];
+                                        mainTable.Merge(dt);
+                                    }
                                     ds.Clear();
                                 }
                                 catch (Exception ex)
                                 {
-                                    badpracs += sDataBase + ", ";
+                                    //MessageBox.Show(ex.Message);
+                                    sBadpracs += sDataBase + ", ";
                                 }
                             }
                         }
                     }
-
+                    //MessageBox.Show("Loop done");
                     dataGridView1.DataSource = mainTable;
-                    DataGridViewColumn column0 = dataGridView1.Columns[0];
-                    column0.Width = 100;
-                    DataGridViewColumn column1 = dataGridView1.Columns[1];
-                    column1.Width = 100;
-                    DataGridViewColumn column2 = dataGridView1.Columns[2];
-                    column2.Width = 100;
-                    DataGridViewColumn column3 = dataGridView1.Columns[3];
-                    column2.Width = 100;
-                    MessageBox.Show("Unable to retrieve " + badpracs);
+                    MessageBox.Show("Unable to retrieve " + sBadpracs);
+                    LabelBox.Text = iBatchcount + " queued batches counted.";
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.TargetSite.ToString());
+                    MessageBox.Show(ex.StackTrace);
+                    MessageBox.Show(ex.Source);
+                    MessageBox.Show(ex.InnerException.ToString());
+                    
                 }
             }
             catch (Exception ex)
             {
-                //int line = (new StackTrace(ex, true)).GetFrame(FrameCount-1).GetFileLineNumber();
+                
                 MessageBox.Show(ex.ToString());
+
             }
+            Application.UseWaitCursor = false;
             
         }
 
         private void Search_btn_Click(object sender, EventArgs e)
         {
-            string searchTerm = "";
-            string practice = "";
-            string sql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-            string user = "User ID=admin;Password=admin;";
-            string type = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+            string sSearchTerm = "";
+            string sPractice = "";
+            string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
+            string sUser = "User ID=admin;Password=admin;";
+            string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
             string sDataBase = "";
-            string dataSource = "";
-            try
-            {
-                if (SearchBox.Text.Count() < 3)
-                {
-                    MessageBox.Show("Please enter at least 3 numbers of the practice ID to search.");
-                }
-                else
-                {
-                    searchTerm = SearchBox.Text;
-                    practice = searchTerm.Substring(0, 3);
-                    if (practice != null)
-                    {
-                        if (practiceList.Contains(practice))
-                        {
-                            //set conn string and query practice
-                            //set datagrid
-                        }
-                    }
-                }
+            string sDataSource = "";
+            MessageBox.Show("Search is currently inactive.");
+            //try
+            //{
+            //    if (SearchBox.Text.Count() < 3)
+            //    {
+            //        MessageBox.Show("Please enter at least 3 numbers of the practice ID to search.");
+            //    }
+            //    else
+            //    {
+            //        searchTerm = SearchBox.Text;
+            //        practice = searchTerm.Substring(0, 3);
+            //        if (practice != null)
+            //        {
+            //            if (practiceList.Contains(practice))
+            //            {
+            //                //set conn string and query practice
+            //                //set datagrid
+            //            }
+            //        }
+            //    }
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
         }
     }
 }
