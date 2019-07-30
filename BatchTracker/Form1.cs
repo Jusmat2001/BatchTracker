@@ -38,8 +38,9 @@ namespace BatchTracker
                 {
                     foreach (string prac in practiceList)
                     {
-                        practiceListView.Items.Add(prac);
+                        lbPracticeListbox.Items.Add(prac);
                     }
+                    lbPracticeListbox.ColumnWidth = 55;
                 }
             }
             catch (Exception ex)
@@ -88,6 +89,7 @@ namespace BatchTracker
                 string sDataBase = "";
                 string sDataSource = "";
                 string sBadpracs = "";
+                
                 Application.UseWaitCursor = true;
                 this.UseWaitCursor = true;
                 int iBatchcount = 0;
@@ -112,7 +114,6 @@ namespace BatchTracker
                             {
                                 try
                                 {
-                                    //MessageBox.Show("connection good to "+connectionString);
                                     connection.Open();
                                     DataSet ds = new DataSet();
                                     DataTable dt = new DataTable();
@@ -143,6 +144,8 @@ namespace BatchTracker
                     dataGridView1.DataSource = mainTable;
                     MessageBox.Show("Unable to retrieve " + sBadpracs);
                     LabelBox.Text = iBatchcount + " queued batches counted.";
+                    
+                        
                 }
                 catch (Exception ex)
                 {
@@ -150,54 +153,43 @@ namespace BatchTracker
                     MessageBox.Show(ex.StackTrace);
                     MessageBox.Show(ex.Source);
                     MessageBox.Show(ex.InnerException.ToString());
-                    
                 }
             }
             catch (Exception ex)
             {
-                
                 MessageBox.Show(ex.ToString());
-
             }
             Application.UseWaitCursor = false;
-            
         }
 
         private void Search_btn_Click(object sender, EventArgs e)
         {
-            string sSearchTerm = "";
-            string sPractice = "";
-            string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-            string sUser = "User ID=admin;Password=admin;";
-            string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
-            string sDataBase = "";
-            string sDataSource = "";
-            MessageBox.Show("Search is currently inactive.");
-            //try
-            //{
-            //    if (SearchBox.Text.Count() < 3)
-            //    {
-            //        MessageBox.Show("Please enter at least 3 numbers of the practice ID to search.");
-            //    }
-            //    else
-            //    {
-            //        searchTerm = SearchBox.Text;
-            //        practice = searchTerm.Substring(0, 3);
-            //        if (practice != null)
-            //        {
-            //            if (practiceList.Contains(practice))
-            //            {
-            //                //set conn string and query practice
-            //                //set datagrid
-            //            }
-            //        }
-            //    }
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message);
-            //}
+            //string sSearchTerm = "";
+            //string sPractice = "";
+            //string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
+            //string sUser = "User ID=admin;Password=admin;";
+            //string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+            //string sDataBase = "";
+            //string sDataSource = "";
+                    
         }
+        
+        public void DateSearch(DateTime start, DateTime end, string practice)
+        {
+            //
+        }
+
+        public void BatchNumberSearch(string batchnumber)
+        {
+            // substing get prac
+            //query for batch # and display
+        }
+
+        public void BatchRangeSearch(string firstBatch, string secondBatch)
+        {
+            //substring both for prac and compare. if both same continue
+
+        }
+         
     }
 }
