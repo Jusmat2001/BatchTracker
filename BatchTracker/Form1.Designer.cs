@@ -33,7 +33,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.GetQueuedBatchBtn = new System.Windows.Forms.Button();
-            this.SearchBox = new System.Windows.Forms.TextBox();
+            this.BatchNumberSearchBox = new System.Windows.Forms.TextBox();
             this.Search_btn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.LabelBox = new System.Windows.Forms.Label();
@@ -41,15 +41,14 @@
             this.label4 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.bBatchRangeBtn = new System.Windows.Forms.RadioButton();
+            this.bBatchNumberBtn = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.startDateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.endDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.startDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.bDateRangeBtn = new System.Windows.Forms.RadioButton();
             this.lbPracticeListbox = new System.Windows.Forms.ListBox();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -105,13 +104,13 @@
             this.GetQueuedBatchBtn.UseVisualStyleBackColor = true;
             this.GetQueuedBatchBtn.Click += new System.EventHandler(this.Populate_btn_Click);
             // 
-            // SearchBox
+            // BatchNumberSearchBox
             // 
-            this.SearchBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.SearchBox.Location = new System.Drawing.Point(10, 162);
-            this.SearchBox.Name = "SearchBox";
-            this.SearchBox.Size = new System.Drawing.Size(158, 27);
-            this.SearchBox.TabIndex = 2;
+            this.BatchNumberSearchBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.BatchNumberSearchBox.Location = new System.Drawing.Point(10, 162);
+            this.BatchNumberSearchBox.Name = "BatchNumberSearchBox";
+            this.BatchNumberSearchBox.Size = new System.Drawing.Size(158, 27);
+            this.BatchNumberSearchBox.TabIndex = 2;
             // 
             // Search_btn
             // 
@@ -156,14 +155,14 @@
             this.SearchGroupBox.Controls.Add(this.label4);
             this.SearchGroupBox.Controls.Add(this.textBox2);
             this.SearchGroupBox.Controls.Add(this.textBox1);
-            this.SearchGroupBox.Controls.Add(this.radioButton3);
-            this.SearchGroupBox.Controls.Add(this.radioButton2);
+            this.SearchGroupBox.Controls.Add(this.bBatchRangeBtn);
+            this.SearchGroupBox.Controls.Add(this.bBatchNumberBtn);
             this.SearchGroupBox.Controls.Add(this.label3);
             this.SearchGroupBox.Controls.Add(this.label2);
-            this.SearchGroupBox.Controls.Add(this.dateTimePicker2);
-            this.SearchGroupBox.Controls.Add(this.SearchBox);
-            this.SearchGroupBox.Controls.Add(this.startDateTimePicker1);
-            this.SearchGroupBox.Controls.Add(this.radioButton1);
+            this.SearchGroupBox.Controls.Add(this.endDateTimePicker);
+            this.SearchGroupBox.Controls.Add(this.BatchNumberSearchBox);
+            this.SearchGroupBox.Controls.Add(this.startDateTimePicker);
+            this.SearchGroupBox.Controls.Add(this.bDateRangeBtn);
             this.SearchGroupBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SearchGroupBox.ForeColor = System.Drawing.Color.Black;
             this.SearchGroupBox.Location = new System.Drawing.Point(4, 9);
@@ -199,29 +198,29 @@
             this.textBox1.Size = new System.Drawing.Size(158, 27);
             this.textBox1.TabIndex = 7;
             // 
-            // radioButton3
+            // bBatchRangeBtn
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Font = new System.Drawing.Font("Times New Roman", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton3.Location = new System.Drawing.Point(6, 215);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(125, 21);
-            this.radioButton3.TabIndex = 6;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Batch # Range";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.bBatchRangeBtn.AutoSize = true;
+            this.bBatchRangeBtn.Font = new System.Drawing.Font("Times New Roman", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bBatchRangeBtn.Location = new System.Drawing.Point(6, 215);
+            this.bBatchRangeBtn.Name = "bBatchRangeBtn";
+            this.bBatchRangeBtn.Size = new System.Drawing.Size(125, 21);
+            this.bBatchRangeBtn.TabIndex = 6;
+            this.bBatchRangeBtn.TabStop = true;
+            this.bBatchRangeBtn.Text = "Batch # Range";
+            this.bBatchRangeBtn.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // bBatchNumberBtn
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Font = new System.Drawing.Font("Times New Roman", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton2.Location = new System.Drawing.Point(6, 135);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(124, 21);
-            this.radioButton2.TabIndex = 5;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Batch Number";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.bBatchNumberBtn.AutoSize = true;
+            this.bBatchNumberBtn.Font = new System.Drawing.Font("Times New Roman", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bBatchNumberBtn.Location = new System.Drawing.Point(6, 135);
+            this.bBatchNumberBtn.Name = "bBatchNumberBtn";
+            this.bBatchNumberBtn.Size = new System.Drawing.Size(124, 21);
+            this.bBatchNumberBtn.TabIndex = 5;
+            this.bBatchNumberBtn.TabStop = true;
+            this.bBatchNumberBtn.Text = "Batch Number";
+            this.bBatchNumberBtn.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -243,35 +242,35 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Start";
             // 
-            // dateTimePicker2
+            // endDateTimePicker
             // 
-            this.dateTimePicker2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker2.Location = new System.Drawing.Point(59, 84);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(109, 22);
-            this.dateTimePicker2.TabIndex = 2;
+            this.endDateTimePicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.endDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.endDateTimePicker.Location = new System.Drawing.Point(59, 84);
+            this.endDateTimePicker.Name = "endDateTimePicker";
+            this.endDateTimePicker.Size = new System.Drawing.Size(109, 22);
+            this.endDateTimePicker.TabIndex = 2;
             // 
-            // startDateTimePicker1
+            // startDateTimePicker
             // 
-            this.startDateTimePicker1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startDateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.startDateTimePicker1.Location = new System.Drawing.Point(59, 56);
-            this.startDateTimePicker1.Name = "startDateTimePicker1";
-            this.startDateTimePicker1.Size = new System.Drawing.Size(109, 22);
-            this.startDateTimePicker1.TabIndex = 1;
+            this.startDateTimePicker.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.startDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.startDateTimePicker.Location = new System.Drawing.Point(59, 56);
+            this.startDateTimePicker.Name = "startDateTimePicker";
+            this.startDateTimePicker.Size = new System.Drawing.Size(109, 22);
+            this.startDateTimePicker.TabIndex = 1;
             // 
-            // radioButton1
+            // bDateRangeBtn
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Font = new System.Drawing.Font("Times New Roman", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton1.Location = new System.Drawing.Point(6, 26);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(171, 21);
-            this.radioButton1.TabIndex = 0;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Date range (1 yr max)";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.bDateRangeBtn.AutoSize = true;
+            this.bDateRangeBtn.Font = new System.Drawing.Font("Times New Roman", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bDateRangeBtn.Location = new System.Drawing.Point(6, 26);
+            this.bDateRangeBtn.Name = "bDateRangeBtn";
+            this.bDateRangeBtn.Size = new System.Drawing.Size(171, 21);
+            this.bDateRangeBtn.TabIndex = 0;
+            this.bDateRangeBtn.TabStop = true;
+            this.bDateRangeBtn.Text = "Date range (1 yr max)";
+            this.bDateRangeBtn.UseVisualStyleBackColor = true;
             // 
             // lbPracticeListbox
             // 
@@ -285,22 +284,6 @@
             this.lbPracticeListbox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.lbPracticeListbox.Size = new System.Drawing.Size(180, 259);
             this.lbPracticeListbox.TabIndex = 8;
-            // 
-            // checkedListBox1
-            // 
-            this.checkedListBox1.BackColor = System.Drawing.Color.SteelBlue;
-            this.checkedListBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.checkedListBox1.Font = new System.Drawing.Font("Times New Roman", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Items.AddRange(new object[] {
-            "Queued",
-            "Sent"});
-            this.checkedListBox1.Location = new System.Drawing.Point(4, 659);
-            this.checkedListBox1.MultiColumn = true;
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(102, 34);
-            this.checkedListBox1.TabIndex = 9;
-            this.checkedListBox1.ThreeDCheckBoxes = true;
             // 
             // label5
             // 
@@ -325,7 +308,6 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.SteelBlue;
             this.ClientSize = new System.Drawing.Size(962, 698);
-            this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.lbPracticeListbox);
             this.Controls.Add(this.SearchGroupBox);
             this.Controls.Add(this.LabelBox);
@@ -348,24 +330,23 @@
 
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button GetQueuedBatchBtn;
-        private System.Windows.Forms.TextBox SearchBox;
+        private System.Windows.Forms.TextBox BatchNumberSearchBox;
         private System.Windows.Forms.Button Search_btn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label LabelBox;
         private System.Windows.Forms.GroupBox SearchGroupBox;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton bBatchRangeBtn;
+        private System.Windows.Forms.RadioButton bBatchNumberBtn;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.DateTimePicker startDateTimePicker1;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.DateTimePicker endDateTimePicker;
+        private System.Windows.Forms.DateTimePicker startDateTimePicker;
+        private System.Windows.Forms.RadioButton bDateRangeBtn;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ListBox lbPracticeListbox;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.Label label5;
     }
 }

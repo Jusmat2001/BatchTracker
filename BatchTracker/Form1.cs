@@ -27,7 +27,8 @@ namespace BatchTracker
         string C1ConnString = "Server=SQL1\\SQL2005;DataBase=CodeOneMaster;UID=ReadOnlyUser;PWD=lij1Z96h";
         List<string> practiceList = new List<string>();
         public AdsConnection connection;
-        public AdsCommand command;
+        public AdsCommand command; string sUser = "User ID=admin;Password=admin;";
+        string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -84,8 +85,8 @@ namespace BatchTracker
             try
             {
                 string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-                string sUser = "User ID=admin;Password=admin;";
-                string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+                //string sUser = "User ID=admin;Password=admin;";
+                //string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
                 string sDataBase = "";
                 string sDataSource = "";
                 string sBadpracs = "";
@@ -164,25 +165,68 @@ namespace BatchTracker
 
         private void Search_btn_Click(object sender, EventArgs e)
         {
-            //string sSearchTerm = "";
-            //string sPractice = "";
-            //string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-            //string sUser = "User ID=admin;Password=admin;";
-            //string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
-            //string sDataBase = "";
-            //string sDataSource = "";
-                    
+            var checkedButton = SearchGroupBox.Controls.OfType<RadioButton>()
+                                      .FirstOrDefault(r => r.Checked);
+            if (checkedButton == null) { MessageBox.Show("Please select a search type"); }
+            else if (bDateRangeBtn.Checked == true)
+            {
+                TimeSpan span = startDateTimePicker.Value - endDateTimePicker.Value;
+                if (span.TotalDays>365) { MessageBox.Show("Please make the date range less than 1 year."); return; }
+                else
+                {
+                    string start, end;
+                    if (startDateTimePicker.Value != null) { start = startDateTimePicker.Value.ToString("yyyy-MM-dd"); }
+                    if (endDateTimePicker.Value != null) { end = endDateTimePicker.Value.ToString("yyyy-MM-dd"); }
+                    string practice = lbPracticeListbox.SelectedItem.ToString();
+                    //DateSearch(start, end, practice);
+                }
+                
+
+            }
+            else if (bBatchNumberBtn.Checked == true)
+            {
+                string batchnumber = BatchNumberSearchBox.Text;
+                BatchNumberSearch(batchnumber);
+            }
         }
         
-        public void DateSearch(DateTime start, DateTime end, string practice)
+        public void DateSearch(string start, string end, string practice)
         {
-            //
+            //string sSql = 
         }
 
         public void BatchNumberSearch(string batchnumber)
         {
             // substing get prac
+            string sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Batch_Num = "+batchnumber;
+            //string sUser = "User ID=admin;Password=admin;";
+            //string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+            var sDataBase = batchnumber.Substring(0, 3);
+            var sDataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
+            string connectionString = @"Data Source = " + sDataSource + sUser + sType;
+            connection = new AdsConnection { ConnectionString = connectionString };
             //query for batch # and display
+            using (connection)
+            {
+                try
+                {
+                    connection.Open();
+                    DataSet ds = new DataSet();
+                    DataTable dt = new DataTable();
+                    IDataAdapter adapter = new AdsDataAdapter(sSql, connection);
+                    adapter.Fill(ds);
+
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        dt = ds.Tables[0];
+                        dataGridView1.DataSource = dt;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
         }
 
         public void BatchRangeSearch(string firstBatch, string secondBatch)
