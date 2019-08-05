@@ -29,6 +29,7 @@ namespace BatchTracker
         public AdsConnection connection;
         public AdsCommand command; string sUser = "User ID=admin;Password=admin;";
         string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
+        string start, end, practice;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -85,8 +86,6 @@ namespace BatchTracker
             try
             {
                 string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-                //string sUser = "User ID=admin;Password=admin;";
-                //string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
                 string sDataBase = "";
                 string sDataSource = "";
                 string sBadpracs = "";
@@ -165,47 +164,91 @@ namespace BatchTracker
 
         private void Search_btn_Click(object sender, EventArgs e)
         {
-            var checkedButton = SearchGroupBox.Controls.OfType<RadioButton>()
-                                      .FirstOrDefault(r => r.Checked);
-            if (checkedButton == null) { MessageBox.Show("Please select a search type"); }
-            else if (bDateRangeBtn.Checked == true)
+            LabelBox.Text = "";
+            try
             {
-                TimeSpan span = startDateTimePicker.Value - endDateTimePicker.Value;
-                if (span.TotalDays>365) { MessageBox.Show("Please make the date range less than 1 year."); return; }
-                else
+                var checkedButton = SearchGroupBox.Controls.OfType<RadioButton>()
+                                .FirstOrDefault(r => r.Checked);
+                if (checkedButton == null) { MessageBox.Show("Please select a search type"); }
+                else if (bDateRangeBtn.Checked == true)
                 {
-                    string start, end;
-                    if (startDateTimePicker.Value != null) { start = startDateTimePicker.Value.ToString("yyyy-MM-dd"); }
-                    if (endDateTimePicker.Value != null) { end = endDateTimePicker.Value.ToString("yyyy-MM-dd"); }
-                    string practice = lbPracticeListbox.SelectedItem.ToString();
-                    //DateSearch(start, end, practice);
+                    TimeSpan span = startDateTimePicker.Value - endDateTimePicker.Value;
+                    var duration = span.Duration();
+                    
+                    if (duration.Days > 365) { MessageBox.Show("Please make the date range less than 1 year."); return; }
+                    else
+                    {
+                        if (startDateTimePicker.Value != null) { start = startDateTimePicker.Value.ToString("yyyy-MM-dd"); }
+                        if (endDateTimePicker.Value != null) { end = endDateTimePicker.Value.ToString("yyyy-MM-dd"); }
+                        try
+                        {
+                            practice = lbPracticeListbox.SelectedItem.ToString();
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("Please select a practice from the Active Practices box (bottom left)."); return;
+                        }
+                        DateSearch(start, end, practice);
+                    }
                 }
-                
-
+                else if (bBatchNumberBtn.Checked == true)
+                {
+                    string batchnumber = BatchNumberSearchBox.Text;
+                    BatchNumberSearch(batchnumber);
+                }
+                else if (bBatchRangeBtn.Checked == true)
+                {
+                    try
+                    {
+                        string firstbatch = bBatchRangeBoxStart.Text;
+                        string secondbatch = bBatchRangeBoxEnd.Text;
+                        if (firstbatch != null && secondbatch != null)
+                        {
+                            if (firstbatch.Substring(0, 3) == secondbatch.Substring(0, 3))
+                            {
+                                BatchRangeSearch(bBatchRangeBoxStart.Text, bBatchRangeBoxEnd.Text);
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Please make sure both batch numbers are accurate, exist, and are in the same practice. ");
+                    }
+                }
             }
-            else if (bBatchNumberBtn.Checked == true)
+            catch (Exception ex)
             {
-                string batchnumber = BatchNumberSearchBox.Text;
-                BatchNumberSearch(batchnumber);
+                MessageBox.Show(ex.Message);
             }
         }
         
         public void DateSearch(string start, string end, string practice)
         {
-            //string sSql = 
+            string sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE BH.Date between '"+start+"' and '"+end+"'";
+            string sDataBase = practice;
+            Query(sDataBase, sSql);
         }
 
         public void BatchNumberSearch(string batchnumber)
         {
-            // substing get prac
             string sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Batch_Num = "+batchnumber;
-            //string sUser = "User ID=admin;Password=admin;";
-            //string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
-            var sDataBase = batchnumber.Substring(0, 3);
+            string sDataBase = batchnumber.Substring(0, 3);
+            Query(sDataBase, sSql);
+        }
+
+        public void BatchRangeSearch(string firstBatch, string secondBatch)
+        {
+            string sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Batch_Num between " + firstBatch + " and " + secondBatch;
+            string sDataBase = firstBatch.Substring(0, 3);
+            Query(sDataBase, sSql);
+        }
+
+        public void Query(string sDataBase, string sSql)
+        {
             var sDataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
             string connectionString = @"Data Source = " + sDataSource + sUser + sType;
             connection = new AdsConnection { ConnectionString = connectionString };
-            //query for batch # and display
+            
             using (connection)
             {
                 try
@@ -221,19 +264,25 @@ namespace BatchTracker
                         dt = ds.Tables[0];
                         dataGridView1.DataSource = dt;
                     }
+                    else if (ds.Tables[0].Rows.Count == 0) { MessageBox.Show("No Results Found"); }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
             }
+            if (connection.State==ConnectionState.Open) { MessageBox.Show("connection open"); connection.Close(); }
         }
 
-        public void BatchRangeSearch(string firstBatch, string secondBatch)
+        private void BatchNumberSearchBox_KeyDown(object sender, KeyEventArgs e)
         {
-            //substring both for prac and compare. if both same continue
-
+            if (e.KeyCode == Keys.Enter) { Search_btn_Click(this, new EventArgs()); }
         }
-         
+
+        private void bBatchRangeBoxEnd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) { Search_btn_Click(this, new EventArgs()); }
+        }
+
     }
 }

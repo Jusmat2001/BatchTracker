@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.GetQueuedBatchBtn = new System.Windows.Forms.Button();
             this.BatchNumberSearchBox = new System.Windows.Forms.TextBox();
@@ -38,9 +38,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.LabelBox = new System.Windows.Forms.Label();
             this.SearchGroupBox = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.bBatchRangeBoxEnd = new System.Windows.Forms.TextBox();
+            this.bBatchRangeBoxStart = new System.Windows.Forms.TextBox();
             this.bBatchRangeBtn = new System.Windows.Forms.RadioButton();
             this.bBatchNumberBtn = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
@@ -49,8 +51,6 @@
             this.startDateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.bDateRangeBtn = new System.Windows.Forms.RadioButton();
             this.lbPracticeListbox = new System.Windows.Forms.ListBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SearchGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -60,34 +60,34 @@
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle14;
             this.dataGridView1.Location = new System.Drawing.Point(190, 9);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle15;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.Size = new System.Drawing.Size(760, 651);
             this.dataGridView1.TabIndex = 0;
@@ -111,6 +111,7 @@
             this.BatchNumberSearchBox.Name = "BatchNumberSearchBox";
             this.BatchNumberSearchBox.Size = new System.Drawing.Size(158, 27);
             this.BatchNumberSearchBox.TabIndex = 2;
+            this.BatchNumberSearchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BatchNumberSearchBox_KeyDown);
             // 
             // Search_btn
             // 
@@ -153,8 +154,8 @@
             this.SearchGroupBox.Controls.Add(this.label5);
             this.SearchGroupBox.Controls.Add(this.label6);
             this.SearchGroupBox.Controls.Add(this.label4);
-            this.SearchGroupBox.Controls.Add(this.textBox2);
-            this.SearchGroupBox.Controls.Add(this.textBox1);
+            this.SearchGroupBox.Controls.Add(this.bBatchRangeBoxEnd);
+            this.SearchGroupBox.Controls.Add(this.bBatchRangeBoxStart);
             this.SearchGroupBox.Controls.Add(this.bBatchRangeBtn);
             this.SearchGroupBox.Controls.Add(this.bBatchNumberBtn);
             this.SearchGroupBox.Controls.Add(this.label3);
@@ -172,6 +173,22 @@
             this.SearchGroupBox.TabStop = false;
             this.SearchGroupBox.Text = "Search by : ";
             // 
+            // label5
+            // 
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label5.Location = new System.Drawing.Point(0, 120);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(180, 2);
+            this.label5.TabIndex = 9;
+            // 
+            // label6
+            // 
+            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label6.Location = new System.Drawing.Point(0, 201);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(180, 2);
+            this.label6.TabIndex = 10;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -182,21 +199,22 @@
             this.label4.TabIndex = 8;
             this.label4.Text = "to";
             // 
-            // textBox2
+            // bBatchRangeBoxEnd
             // 
-            this.textBox2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.textBox2.Location = new System.Drawing.Point(10, 289);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(158, 27);
-            this.textBox2.TabIndex = 8;
+            this.bBatchRangeBoxEnd.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.bBatchRangeBoxEnd.Location = new System.Drawing.Point(10, 289);
+            this.bBatchRangeBoxEnd.Name = "bBatchRangeBoxEnd";
+            this.bBatchRangeBoxEnd.Size = new System.Drawing.Size(158, 27);
+            this.bBatchRangeBoxEnd.TabIndex = 8;
+            this.bBatchRangeBoxEnd.KeyDown += new System.Windows.Forms.KeyEventHandler(this.bBatchRangeBoxEnd_KeyDown);
             // 
-            // textBox1
+            // bBatchRangeBoxStart
             // 
-            this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.textBox1.Location = new System.Drawing.Point(10, 239);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(158, 27);
-            this.textBox1.TabIndex = 7;
+            this.bBatchRangeBoxStart.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.bBatchRangeBoxStart.Location = new System.Drawing.Point(10, 239);
+            this.bBatchRangeBoxStart.Name = "bBatchRangeBoxStart";
+            this.bBatchRangeBoxStart.Size = new System.Drawing.Size(158, 27);
+            this.bBatchRangeBoxStart.TabIndex = 7;
             // 
             // bBatchRangeBtn
             // 
@@ -213,6 +231,7 @@
             // bBatchNumberBtn
             // 
             this.bBatchNumberBtn.AutoSize = true;
+            this.bBatchNumberBtn.FlatAppearance.CheckedBackColor = System.Drawing.Color.Black;
             this.bBatchNumberBtn.Font = new System.Drawing.Font("Times New Roman", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bBatchNumberBtn.Location = new System.Drawing.Point(6, 135);
             this.bBatchNumberBtn.Name = "bBatchNumberBtn";
@@ -281,25 +300,8 @@
             this.lbPracticeListbox.Location = new System.Drawing.Point(4, 401);
             this.lbPracticeListbox.MultiColumn = true;
             this.lbPracticeListbox.Name = "lbPracticeListbox";
-            this.lbPracticeListbox.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.lbPracticeListbox.Size = new System.Drawing.Size(180, 259);
             this.lbPracticeListbox.TabIndex = 8;
-            // 
-            // label5
-            // 
-            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label5.Location = new System.Drawing.Point(0, 120);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(180, 2);
-            this.label5.TabIndex = 9;
-            // 
-            // label6
-            // 
-            this.label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label6.Location = new System.Drawing.Point(0, 201);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(180, 2);
-            this.label6.TabIndex = 10;
             // 
             // Form1
             // 
@@ -342,8 +344,8 @@
         private System.Windows.Forms.DateTimePicker endDateTimePicker;
         private System.Windows.Forms.DateTimePicker startDateTimePicker;
         private System.Windows.Forms.RadioButton bDateRangeBtn;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox bBatchRangeBoxEnd;
+        private System.Windows.Forms.TextBox bBatchRangeBoxStart;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ListBox lbPracticeListbox;
         private System.Windows.Forms.Label label6;
