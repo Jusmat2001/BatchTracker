@@ -29,7 +29,8 @@ namespace BatchTracker
         public AdsConnection connection;
         public AdsCommand command; string sUser = "User ID=admin;Password=admin;";
         string sType = "ServerType=ADS_REMOTE_SERVER;SecurityMode=ADS_IGNORERIGHTS;";
-        string start, end, practice;
+        string start, end, practice, sSql, sDataSource, sDataBase;
+        
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -85,9 +86,9 @@ namespace BatchTracker
         {
             try
             {
-                string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
-                string sDataBase = "";
-                string sDataSource = "";
+                //string sSql = "SELECT BATCH_NUM, EMC_RECV, STATUS FROM Batch WHERE Status = 'Q';";
+                sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Status = 'Q'";
+                
                 string sBadpracs = "";
                 
                 Application.UseWaitCursor = true;
@@ -95,13 +96,12 @@ namespace BatchTracker
                 int iBatchcount = 0;
 
                 DataTable mainTable = new DataTable();
-                mainTable.Columns.Add("Practice", typeof(Int32), sDataBase);
+                //mainTable.Columns.Add("Practice", typeof(Int32), sDataBase);
                 try
                 {
                     practiceList = GetPractices();
                     if (practiceList != null)
                     {
-                        //MessageBox.Show("loop");
                         for (int i = 0; i <= practiceList.Count - 1; i++)
                         {
                             //change conn string for each practice
@@ -123,10 +123,10 @@ namespace BatchTracker
                                     iBatchcount += ds.Tables[0].Rows.Count;
                                     if (ds.Tables[0].Rows.Count >0)
                                     {
-                                        DataRow row;
-                                        row = mainTable.NewRow();
-                                        row["Practice"] = sDataBase;
-                                        mainTable.Rows.Add(row);
+                                        //DataRow row;
+                                        //row = mainTable.NewRow();
+                                        //row["Practice"] = sDataBase;
+                                        //mainTable.Rows.Add(row);
                                         dt = ds.Tables[0];
                                         mainTable.Merge(dt);
                                     }
@@ -134,18 +134,15 @@ namespace BatchTracker
                                 }
                                 catch (Exception ex)
                                 {
-                                    //MessageBox.Show(ex.Message);
                                     sBadpracs += sDataBase + ", ";
                                 }
                             }
                         }
                     }
-                    //MessageBox.Show("Loop done");
+                    if (mainTable.Rows.Count == 0) { MessageBox.Show("No Results Found"); return; }
                     dataGridView1.DataSource = mainTable;
                     MessageBox.Show("Unable to retrieve " + sBadpracs);
                     LabelBox.Text = iBatchcount + " queued batches counted.";
-                    
-                        
                 }
                 catch (Exception ex)
                 {
@@ -224,28 +221,28 @@ namespace BatchTracker
         
         public void DateSearch(string start, string end, string practice)
         {
-            string sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE BH.Date between '"+start+"' and '"+end+"'";
-            string sDataBase = practice;
+            sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE BH.Date between '"+start+"' and '"+end+"'";
+            sDataBase = practice;
             Query(sDataBase, sSql);
         }
 
         public void BatchNumberSearch(string batchnumber)
         {
-            string sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Batch_Num = "+batchnumber;
-            string sDataBase = batchnumber.Substring(0, 3);
+            sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Batch_Num = "+batchnumber;
+            sDataBase = batchnumber.Substring(0, 3);
             Query(sDataBase, sSql);
         }
 
         public void BatchRangeSearch(string firstBatch, string secondBatch)
         {
-            string sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Batch_Num between " + firstBatch + " and " + secondBatch;
-            string sDataBase = firstBatch.Substring(0, 3);
+            sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Batch_Num between " + firstBatch + " and " + secondBatch;
+            sDataBase = firstBatch.Substring(0, 3);
             Query(sDataBase, sSql);
         }
 
         public void Query(string sDataBase, string sSql)
         {
-            var sDataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
+            sDataSource = @"\\CLAIMS2\AltaData\" + sDataBase + @"\Data\AltaPoint.add;";
             string connectionString = @"Data Source = " + sDataSource + sUser + sType;
             connection = new AdsConnection { ConnectionString = connectionString };
             
@@ -258,13 +255,15 @@ namespace BatchTracker
                     DataTable dt = new DataTable();
                     IDataAdapter adapter = new AdsDataAdapter(sSql, connection);
                     adapter.Fill(ds);
+                    int rows = ds.Tables[0].Rows.Count;
 
-                    if (ds.Tables[0].Rows.Count > 0)
+                    if (rows > 0)
                     {
                         dt = ds.Tables[0];
                         dataGridView1.DataSource = dt;
+                        LabelBox.Text = rows.ToString() + " results counted.";
                     }
-                    else if (ds.Tables[0].Rows.Count == 0) { MessageBox.Show("No Results Found"); }
+                    else if (rows == 0) { MessageBox.Show("No Results Found"); }
                 }
                 catch (Exception ex)
                 {
