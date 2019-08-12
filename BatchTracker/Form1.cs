@@ -90,10 +90,9 @@ namespace BatchTracker
                 sSql = "Select Distinct Batch_Num, EMC_RECV, Status, BH.Date From Batch Join [Billing History] BH ON Batch_Num = BH.Batch WHERE Status = 'Q'";
                 
                 string sBadpracs = "";
-                
-                Application.UseWaitCursor = true;
-                this.UseWaitCursor = true;
                 int iBatchcount = 0;
+                dataGridView1.DataSource = null;
+                LabelBox.Text = null;
 
                 DataTable mainTable = new DataTable();
                 //mainTable.Columns.Add("Practice", typeof(Int32), sDataBase);
@@ -156,7 +155,7 @@ namespace BatchTracker
             {
                 MessageBox.Show(ex.ToString());
             }
-            Application.UseWaitCursor = false;
+            
         }
 
         private void Search_btn_Click(object sender, EventArgs e)
